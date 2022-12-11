@@ -2,10 +2,9 @@ import SwiftUI
 import Combine
 import Contacts
 
-internal final class ContainersObserver: NSObject, ObservableObject {
+internal final class ContainersObserver: BaseObserver {
     @Published internal var results: [CNContainer] = []
-
-    internal let store = CNContactStore()
+    
     private var cancellable: AnyCancellable?
 
     private let predicate: NSPredicate?
@@ -16,6 +15,12 @@ internal final class ContainersObserver: NSObject, ObservableObject {
         self.animation = animation
         super.init()
 
+        self.requestAccessIfNeeded { result in
+            if case let .success(success) = result, success {
+                self.refetch(animated: true)
+            }
+        }
+        
         self.cancellable = NotificationCenter.default
             .publisher(for: Notification.Name.CNContactStoreDidChange)
             .sink { [weak self] _ in
@@ -27,6 +32,8 @@ internal final class ContainersObserver: NSObject, ObservableObject {
     }
 
     private func refetch(animated: Bool) {
+        guard self.isAuthorized else { return }
+        
         var containers: [CNContainer] = []
 
         defer {

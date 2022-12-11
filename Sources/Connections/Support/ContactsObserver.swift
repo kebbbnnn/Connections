@@ -2,10 +2,9 @@ import SwiftUI
 import Combine
 import Contacts
 
-internal final class ContactsObserver: NSObject, ObservableObject {
+internal final class ContactsObserver: BaseObserver {
     @Published internal var results: [CNContact] = []
-
-    internal let store = CNContactStore()
+    
     private var cancellable: AnyCancellable?
 
     private let request: CNContactFetchRequest
@@ -16,6 +15,12 @@ internal final class ContactsObserver: NSObject, ObservableObject {
         self.animation = animation
         super.init()
 
+        self.requestAccessIfNeeded { result in
+            if case let .success(success) = result, success {
+                self.refetch(animated: true)
+            }
+        }
+        
         self.cancellable = NotificationCenter.default
             .publisher(for: Notification.Name.CNContactStoreDidChange)
             .sink { [weak self] _ in
@@ -27,6 +32,8 @@ internal final class ContactsObserver: NSObject, ObservableObject {
     }
 
     private func refetch(animated: Bool) {
+        guard self.isAuthorized else { return }
+        
         var contacts: [CNContact] = []
 
         defer {
