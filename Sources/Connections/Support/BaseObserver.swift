@@ -8,14 +8,14 @@
 import Foundation
 import Contacts
 
-internal class BaseObserver: NSObject, ObservableObject {
-    internal var isAuthorized: Bool {
+open class BaseObserver: NSObject, ObservableObject {
+    public var isAuthorized: Bool {
         CNContactStore.authorizationStatus(for: .contacts) == .authorized
     }
     
-    internal let store = CNContactStore()
+    public let store = CNContactStore()
     
-    internal func requestAccessIfNeeded(completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func requestAccessIfNeeded(completion: @escaping (Result<Bool, Error>) -> Void) {
         guard !self.isAuthorized else { return }
         
         self.store.requestAccess(for: .contacts) { success, error in
