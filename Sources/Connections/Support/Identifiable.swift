@@ -1,7 +1,7 @@
 import Foundation
 import Contacts
 
-extension CNContact: Identifiable {
+extension CNContact {
     public var id: String { identifier }
 }
 

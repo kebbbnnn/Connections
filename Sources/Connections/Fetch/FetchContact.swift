@@ -20,7 +20,7 @@ public extension FetchContact {
     ///   - idenfifier: The identifier of the contact
     ///   - keysToFetch: The keys to fetch for this contact
     init(
-        idenfifier: CNContact.ID,
+        idenfifier: String,
         keysToFetch: [ContactKey] = .allExcludingNote,
         animation: Animation? = .default
     ) {

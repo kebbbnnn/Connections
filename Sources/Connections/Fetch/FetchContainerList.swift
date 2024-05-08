@@ -54,7 +54,7 @@ public extension FetchContainerList {
     /// - Parameters:
     ///   - container: The identifier of the contact
     init(
-        forContact identifier: CNContact.ID,
+        forContact identifier: String,
         animation: Animation? = .default
     ) {
         self.init(predicate: CNContainer.predicateForContainerOfContact(withIdentifier: identifier), animation: animation)

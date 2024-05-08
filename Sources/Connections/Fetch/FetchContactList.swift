@@ -115,7 +115,7 @@ public extension FetchContactList {
     ///   - sortOrder: The sort order to return the results
     ///   - unified: If true, unified contacts will be returned unifed
     init(
-        identifiers: [CNContact.ID],
+        identifiers: [String],
         keysToFetch: [ContactKey],
         sortOrder: CNContactSortOrder = .userDefault,
         unified: Bool = true,
